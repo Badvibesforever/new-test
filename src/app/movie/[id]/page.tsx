@@ -20,11 +20,13 @@ interface Props {
   };
 }
 
-import type { Movie, Video } from "@/type";
-
-const MovieDetails = async ({ params: { id } }: Props) => {
+const MovieDetails = async ({ params }: Props) => {
+  if (!params || !params.id) {
+    throw new Error("Invalid parameters");
+  }
+  const { id } = params;
   const movies = await getMovieVideos(id);
-  const videos = movies.map((movie: Video) => ({
+  const videos = movies.map((movie: any) => ({
     id: movie.id,
     iso_639_1: movie.iso_639_1,
     iso_3166_1: movie.iso_3166_1,
@@ -36,7 +38,7 @@ const MovieDetails = async ({ params: { id } }: Props) => {
     size: movie.size,
     type: movie.type,
   }));
-  const details: Movie = await getMovieDetails(id);
+  const details: any = await getMovieDetails(id);
   const popoularMovies = await getPopularMovies();
 
   return (
